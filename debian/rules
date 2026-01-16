@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	dh_auto_build
+	mkdir build/; \
+	cp tombi_$$(dpkg --print-architecture) build/tombi
+
+override_dh_auto_install:
+	dh_auto_install
+	dh_install build/tombi usr/bin/
+	dh_install completions/tombi /usr/share/bash-completion/completions/
+	dh_install completions/_tombi usr/share/zsh/vendor-completions/
+	dh_install completions/tombi.fish usr/share/fish/vendor_completions.d/
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build

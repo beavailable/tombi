@@ -1,0 +1,35 @@
+name: Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_release:
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: '36 * * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Update
+        id: update
+        run: ./update.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOMBI_FORCE_RELEASE: ${{ inputs.force_release }}
+      - name: Upload to OBS
+        if: ${{ steps.update.outputs.release == 'true' }}
+        uses: beavailable/obs-upload@main
+        with:
+          username: beavailable
+          password: ${{ secrets.OBS_PASSWORD }}
+          project: home:beavailable
+          package: tombi
+          type: deb
