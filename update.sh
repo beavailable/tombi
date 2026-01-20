@@ -25,7 +25,7 @@ download_binaries() {
         gzip -d "$f"
         bin="${f%.gz}"
         chmod +x "$bin"
-        if [[ "$bin" == tombi-cli-$version-x86_64* ]]; then
+        if [[ "$bin" == tombi-cli-$1-x86_64* ]]; then
             mv "$bin" tombi_amd64
         else
             mv "$bin" tombi_arm64
