@@ -23,11 +23,12 @@ jobs:
         run: ./update.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TOMBI_FORCE_RELEASE: ${{ inputs.force_release }}
+          ENV_FORCE_RELEASE: ${{ inputs.force_release }}
       - name: Upload to OBS
         if: ${{ steps.update.outputs.release == 'true' }}
         uses: beavailable/obs-upload@main
         with:
+          pre-run: git add tombi_* completions && git -c user.name='beavailable' -c user.email='beavailable@proton.me' commit -m 'Add files'
           username: beavailable
           password: ${{ secrets.OBS_PASSWORD }}
           project: home:beavailable
